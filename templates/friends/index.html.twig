@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+<div>
+            <br>
+            <input id="search" placeholder="Поиск..." class="form-control">
+            <br>        
+        </div>
+<table class="table table-hover">
+<thead>
+<tr>
+    <td>Имя</td>
+    <td>Возраст</td>
+    <td>Фото</td>   
+</tr>
+</thead>
+<tbody id="feedBackTableBody">
+  {% for friend in friends %}
+        <tr>
+            <td><a href="/personal/{{ friend.id }}"><img src="{{ asset('images/avatar.jpeg') }}"  style="width: 80px;height: 80px;border-radius: 50%;" alt="avatar"></a></td>   
+    		<td><a href="/personal/{{ friend.id }}">{{ friend.login }}</a></td>
+    		<td><a href="/personal/{{ friend.id }}">{{ friend.login }}</a></td>    		
+  		</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<script>
+            $(document).ready(function () {
+                $("#search").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#feedBackTableBody tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    });
+                });       
+            });
+
+
+        </script>
+{% endblock %}

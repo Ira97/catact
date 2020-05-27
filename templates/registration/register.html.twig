@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Регистрация</h1>
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.login, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} )}}
+        {{ form_row(registrationForm.plainPassword, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} ) }}
+        {{ form_row(registrationForm.birthday, {'row_attr': {'class': 'form-group date'}, 'attr': {'class': 'form-control'}} ) }}        
+         {{ form_row(registrationForm.name, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} ) }}
+          {{ form_row(registrationForm.gender, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} ) }}
+          {{ form_row(registrationForm.city, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} ) }}
+          {{ form_row(registrationForm.agreeTerms, {'row_attr': {'class': 'form-group'}, 'attr': {'class': 'form-control'}} ) }}
+        <button type="submit" class="btn btn-info">Регистрация</button>
+    {{ form_end(registrationForm) }}
+
+{% endblock %}
