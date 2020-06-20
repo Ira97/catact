@@ -3,8 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Gender;
-use App\Entity\City;
 use App\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +22,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -35,12 +34,32 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('personal', array(
-            'id' => $user->getId()));
+
+            $file = $user->getPicture();
+            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+            // перемещает файл в каталог, где хранятся брошюры
+            $file->move(
+                $this->getParameter('pictures_directory'),
+                $fileName
+            );
+            $user->setPicture($fileName);
+            return $this->redirectToRoute('personal', array('id'=> $user->getId()));
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView()
+            'registrationForm' => $form->createView(),
         ]);
+
+    }
+
+    /**
+     * @return string
+     */
+    private function generateUniqueFileName()
+    {
+        //добавляем метод генерации имени файла
+        // md5() уменьшает схожесть имён файлов, сгенерированных
+        // uniqid(), которые основанный на временных отметках
+        return md5(uniqid());
     }
 }

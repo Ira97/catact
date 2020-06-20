@@ -1,41 +1,56 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Hello FriendsController!{% endblock %}
+
 {% block body %}
-<div class="container">
-<div>
-            <br>
-            <input id="search" placeholder="Поиск..." class="form-control">
-            <br>        
-        </div>
-<table class="table table-hover">
-<thead>
-<tr>
-    <td>Имя</td>
-    <td>Возраст</td>
-    <td>Фото</td>   
-</tr>
-</thead>
-<tbody id="feedBackTableBody">
-  {% for friend in friends %}
+<div class="mycontainer" style=" min-width: 26rem; max-width: 30rem;  margin-right: auto;  margin-left: auto;">
+<input id="search" placeholder="Поиск по сайту" class="form-control">
+    <table id="friend" class="table table-hover">
         <tr>
-            <td><a href="/personal/{{ friend.id }}"><img src="{{ asset('images/avatar.jpeg') }}"  style="width: 80px;height: 80px;border-radius: 50%;" alt="avatar"></a></td>   
-    		<td><a href="/personal/{{ friend.id }}">{{ friend.login }}</a></td>
-    		<td><a href="/personal/{{ friend.id }}">{{ friend.login }}</a></td>    		
-  		</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-<script>
-            $(document).ready(function () {
-                $("#search").on("keyup", function () {
-                    var value = $(this).val().toLowerCase();
-                    $("#feedBackTableBody tr").filter(function () {
-                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                    });
-                });       
+            <th scope="col" > Аватар</th>
+            <th scope="col" > Имя</th>
+            <th scope="col" > Пол</th>
+            <th scope="col" > Город</th>
+        </tr>
+
+            {% for friend in friends %}
+        <tr>
+            <td scope="row"><img src="{{ asset(friend.Picture) }}" style="width: 80px;height: 80px;border-radius: 50%;" alt="avatar"></a></td>
+            <td scope="row">{{ friend.showCity(friend.city) }}</td>
+            <td scope="row" >{{ friend.showGender(friend.gender) }}</td>
+            <td scope="row" ><button id="{{friend.id}}" value="{{friend.id}}" onclick="addFriend(this.value)" type="button" class="btn btn-primary">Добавить в друзья</button></td>
+            {% endfor %}
+
+    </table>
+    <script>
+        $(document).ready(function(){
+            $("#search").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#friend").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
             });
+        });
+    </script>
+    <script>
+  function addFriend(val) {
+      debugger;
+    $.ajax('{{ path('addFriends') }}', {
+        type: "get",
+        data: {
+            id : val,
+        },
+    success: function() {
+        $("#"+val).attr("disabled", true);
+        $("#"+val).html('Уже в друзьях');
+    },
+        error: function (request) { alert(request.responseText);
+    }
+    });
+    return false; // this stops normal button behaviour from executing;
+
+    };
+    </script>
 
 
-        </script>
-{% endblock %}
+    {% endblock %}

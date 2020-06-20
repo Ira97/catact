@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass=CityRepository::class)
@@ -18,23 +20,23 @@ class City
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $name;
+    private $name_city;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNameCity(): ?string
     {
-        return $this->name;
+        return $this->name_city;
     }
 
-    public function setName(string $name): self
+    public function setNameCity(?string $name_city): self
     {
-        $this->name = $name;
+        $this->name_city = $name_city;
 
         return $this;
     }

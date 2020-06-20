@@ -18,23 +18,23 @@ class Gender
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $Name;
+    private $name_gender;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNameGender(): ?string
     {
-        return $this->Name;
+        return $this->name_gender;
     }
 
-    public function setName(string $Name): self
+    public function setNameGender(?string $name_gender): self
     {
-        $this->Name = $Name;
+        $this->name_gender = $name_gender;
 
         return $this;
     }

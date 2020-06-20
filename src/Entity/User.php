@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"login"}, message="There is already an account with this login")
@@ -36,7 +37,8 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Gender")
+     * @ORM\JoinColumn(name="gender", referencedColumnName="id")
      */
     private $gender;
 
@@ -50,15 +52,19 @@ class User implements UserInterface
      */
     private $birthday;
 
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\City")
+     * @ORM\JoinColumn(name="city", referencedColumnName="id")
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $avatar;
+    private $Picture;
+
+
 
     public function getId(): ?int
     {
@@ -111,6 +117,7 @@ class User implements UserInterface
      */
     public function getPassword()
     {
+        return $this->password;
         // not needed for apps that do not check user passwords
     }
 
@@ -138,12 +145,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGender(): ?int
+    public function getGender(): ?Gender
     {
         return $this->gender;
     }
 
-    public function setGender(int $gender): self
+    public function setGender(Gender $gender): self
     {
         $this->gender = $gender;
 
@@ -174,26 +181,39 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCity(): ?int
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(int $city): self
+
+    public function setCity(City $city): self
     {
         $this->city = $city;
 
         return $this;
     }
-
-    public function getAvatar(): ?string
+    public function showCity(City $city)
     {
-        return $this->avatar;
+
+        return $city->getNameCity();
+
+    }
+    public function showGender(Gender $gender)
+    {
+
+        return $gender->getNameGender();
+
     }
 
-    public function setAvatar(?string $avatar): self
+    public function getPicture()
     {
-        $this->avatar = $avatar;
+        return $this->Picture;
+    }
+
+    public function setPicture($Picture): self
+    {
+        $this->Picture = $Picture;
 
         return $this;
     }
