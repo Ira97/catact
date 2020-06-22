@@ -29,12 +29,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
             $file = $user->getPicture();
             $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
             // перемещает файл в каталог, где хранятся брошюры
@@ -42,8 +37,15 @@ class RegistrationController extends AbstractController
                 $this->getParameter('pictures_directory'),
                 $fileName
             );
+
             $user->setPicture($fileName);
-            return $this->redirectToRoute('personal', array('id'=> $user->getId()));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+
+
+            return $this->redirectToRoute('app_login', array('id'=> $user->getId()));
         }
 
         return $this->render('registration/register.html.twig', [

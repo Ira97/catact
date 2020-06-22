@@ -16,31 +16,79 @@ class FriendsController extends AbstractController
      */
     public function index()
     {
+        $user_authorized_id = $this->getUser()->getId();
+
         $friends = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users_to_friends = $this->getDoctrine()->getRepository(UserToFriends::class)->findAll();
+
+        foreach ($friends as $friend) // проверка есть ли в друзьях или нет при загрузке страницы
+        {
+            $friend_id = $friend->getId();
+            foreach ($users_to_friends as $user_to_friend) {
+                if ($user_authorized_id == $user_to_friend->getUser() && $friend_id == $user_to_friend->getFriend()) {
+                    $friend->setIsFriend(true);
+                    break;
+                } else {
+                    $friend->setIsFriend(false);
+                }
+
+            }
+        }
+
+
         return $this->render('friends/index.html.twig', [
-            'controller_name' => 'FriendsController','friends' => $friends
+            'controller_name' => 'FriendsController', 'friends' => $friends,'user_authorized_id' => $user_authorized_id
         ]);
+
+
     }
+
     /**
      * @Route("/addFriends", name="addFriends" )
      */
-   public function addFriends(Request $request): Response
-   {
-       $friend_id = $request->query->get('id');
-       $user_id = $this->getUser()->getId();
-       $entityManager = $this->getDoctrine()->getManager();
-       $UserToFriends = new UserToFriends();
-       $UserToFriends->setUser($user_id);
-       $UserToFriends->setFriend($friend_id);
-       // tell Doctrine you want to (eventually) save the Product (no queries yet)
-       $entityManager->persist($UserToFriends);
-       // actually executes the queries (i.e. the INSERT query)
-       $entityManager->flush();
-       $friends = $this->getDoctrine()->getRepository(User::class)->findAll();
-       return $this->render('friends/index.html.twig', [
-           'controller_name' => 'FriendsController','friends' => $friends
-       ]);
-       // нужно пререписать
-   }
+    public function addFriends(Request $request): Response
+
+    {
+        $user_authorized_id = $this->getUser()->getId();
+
+        $friends = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users_to_friends = $this->getDoctrine()->getRepository(UserToFriends::class)->findAll();
+// проверка есть ли в друзьях или нет при загрузке страницы
+        foreach ($friends as $friend)
+        {
+            $friend_id = $friend->getId();
+            foreach ($users_to_friends as $user_to_friend) {
+                if ($user_authorized_id == $user_to_friend->getUser() && $friend_id == $user_to_friend->getFriend()) {
+                    $friend->setIsFriend(true);
+                    break;
+                } else {
+                    $friend->setIsFriend(false);
+                }
+
+            }
+            // ДОбавление в друзья ( запись в бд)
+            $friend_id = $request->query->get('id');
+            $user_id = $this->getUser()->getId();
+            $entityManager = $this->getDoctrine()->getManager();
+            $UserToFriends = new UserToFriends();
+            // добавление 1 записи где user - friend
+            $UserToFriends->setUser($user_id);
+            $UserToFriends->setFriend($friend_id);
+            $entityManager->persist($UserToFriends);
+            $entityManager->flush();
+            // добавление 2 записи где friend- user
+            $UserToFriends = new UserToFriends();
+            $UserToFriends->setUser($friend_id);
+            $UserToFriends->setFriend($user_id);
+            $entityManager->persist($UserToFriends);
+            $entityManager->flush();
+
+            $friends = $this->getDoctrine()->getRepository(User::class)->findAll();
+            return $this->render('friends/index.html.twig', [
+                'controller_name' => 'FriendsController', 'friends' => $friends,'user_authorized_id' => $user_authorized_id
+            ]);
+
+        }
+    }
 }
 

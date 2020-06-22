@@ -4,17 +4,60 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+.example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+.example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
+<section class="main-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3">
+				<img class="img-thumbnail" src="{{ asset('uploads/pictures/' ~ user.Picture) }}"/>
+			</div>
+			<div class="col-md-9">
+				<div class="row">
+					<div class="col-md-12">
+						<p> <p>
+						<p>Имя: {{ user.Name }}<p>
+						<p>Город: {{ user.showCity(user.city)}}<p>
+						<p>Пол: {{ user.showGender(user.Gender)}}<p>
+							{% if user.id==user_authorized_id %}
+							{{ form_start(PictureForm) }}
+							{{ form_row(PictureForm.Picture) }}
+						<p scope="row" ><button type="submit" class="btn btn-primary">Обновить фото</button><p>
+						<p scope="row" ><button type="submit" class="btn btn-primary" onClick='location.href="/friends"'>Найти друзей</button><p>
+							{{ form_end(PictureForm) }}
+					    {% else %}
+							{% if user.IsFriend == false %}
+						<td scope="row" ><button  id="{{user.id}}" value="{{user.id}}" onclick="addFriend(this.value)" type="button" class="btn btn-primary" >Добавть в друзья</button></td>
+					{% else %}
+						<td scope="row" ><button disabled type="button" class="btn btn-primary" >Уже в друзьях</button></td>
+						{% endif %}
+						{% endif %}
 
-<div class="example-wrapper">
-    <h1> {{user.name}}! ✅</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+	<script>
+		function addFriend(val) {
+			debugger;
+			$.ajax('{{ path('addFriends') }}', {
+				type: "get",
+				data: {
+					id : val,
+				},
+				success: function() {
+					$("#"+val).attr("disabled", true);
+					$("#"+val).html('Уже в друзьях');
+				},
+				error: function (request) { alert(request.responseText);
+				}
+			});
+			return false;
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/User/Desktop/OSPanel/domains/my-project/src/Controller/PersonalController.php'|file_link(0) }}">src/Controller/PersonalController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/User/Desktop/OSPanel/domains/my-project/templates/personal/index.html.twig'|file_link(0) }}">templates/personal/index.html.twig</a></code></li>
-    </ul>
-</div>
+		};
+	</script>
+
 {% endblock %}

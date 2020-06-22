@@ -9,21 +9,14 @@
 
 
 {{ form_start(registrationForm) }}
-
-{{ form_row(registrationForm.login , {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
-
+    {{ form_row(registrationForm.login , {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
     {{ form_row(registrationForm.plainPassword , {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
     {{ form_row(registrationForm.city , {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
     {{ form_row(registrationForm.gender, {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
     {{ form_row(registrationForm.name, {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
     {{ form_row(registrationForm.Birthday, {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
-    //выводим строку добавления изображения
-    {{ form_row(registrationForm.Picture) }}
-
-{{ form_row(registrationForm.agreeTerms) }}
-
-
-<button type="submit" class="btn btn-info">  Зарегистрироваться</button>
-
+    {{ form_row(registrationForm.Picture, {'row_attr':{'class':'form-group'}, 'attr' : {'class': 'form-control' }}) }}
+    {{ form_row(registrationForm.agreeTerms) }}
+    <button type="submit" class="btn btn-lg btn-primary btn-block">  Зарегистрироваться</button>
 {{ form_end(registrationForm) }}
 {% endblock %}

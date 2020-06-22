@@ -9,24 +9,39 @@
         <tr>
             <th scope="col" > Аватар</th>
             <th scope="col" > Имя</th>
-            <th scope="col" > Пол</th>
             <th scope="col" > Город</th>
+            <th scope="col" > Пол</th>
+
         </tr>
 
             {% for friend in friends %}
+        {% if friend.id != user_authorized_id %}
         <tr>
-            <td scope="row"><img src="{{ asset(friend.Picture) }}" style="width: 80px;height: 80px;border-radius: 50%;" alt="avatar"></a></td>
+            <td scope="row">
+                <a href="/personal/{{ friend.id }}">
+                    <img src="{{ asset('uploads/pictures/' ~ friend.Picture) }}" style="width: 80px;height: 80px;border-radius: 50%;" alt="avatar">
+                </a> </td>
+            <td scope="row">{{ friend.Name }}</td>
             <td scope="row">{{ friend.showCity(friend.city) }}</td>
             <td scope="row" >{{ friend.showGender(friend.gender) }}</td>
-            <td scope="row" ><button id="{{friend.id}}" value="{{friend.id}}" onclick="addFriend(this.value)" type="button" class="btn btn-primary">Добавить в друзья</button></td>
+
+
+            {% if friend.IsFriend == false %}
+                <td scope="row" ><button id="{{friend.id}}" value="{{friend.id}}" onclick="addFriend(this.value)" type="button" class="btn btn-primary btn-block">Добавить в друзья</button></td>
+            {% else %}
+                <td scope="row" ><button disabled type="button" class="btn btn-primary btn-block" >Уже в друзьях</button></td>
+            {% endif %}
+            {% endif %}
             {% endfor %}
 
+
     </table>
+</div>
     <script>
         $(document).ready(function(){
             $("#search").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
-                $("#friend").filter(function() {
+                $("#friend tr").filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
@@ -47,7 +62,7 @@
         error: function (request) { alert(request.responseText);
     }
     });
-    return false; // this stops normal button behaviour from executing;
+    return false;
 
     };
     </script>

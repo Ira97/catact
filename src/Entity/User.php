@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -61,10 +62,23 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg" })
+     *
      */
     private $Picture;
 
+    private $IsFriend;
 
+    public function getIsFriend()
+    {
+        return $this->IsFriend;
+    }
+    public function setIsFriend( bool $IsFriend)
+    {
+        $this->IsFriend = $IsFriend;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -217,4 +231,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }

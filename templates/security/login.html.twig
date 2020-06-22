@@ -3,6 +3,7 @@
 {% block title %}Авторизация{% endblock %}
 
 {% block body %}
+<div class="mycontainer" style=" min-width: 16rem; max-width: 30rem;  margin-right: auto;  margin-left: auto;">
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -10,11 +11,11 @@
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+            Вы авторизованы как {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
+    <h1 class="h3 mb-12 text-center font-weight-normal">Добро пожаловать в Catact!</h1>
 
-    <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
     <label for="inputLogin">Логин</label>
     <input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" required autofocus>
     <label for="inputPassword">Пароль</label>
@@ -23,20 +24,18 @@
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
         <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" name="_remember_me"> Remember me
+                <input type="checkbox" name="_remember_me"> Запомнить меня
             </label>
         </div>
-    #}
 
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">
         Войти
     </button>
+    <button type="button" class="btn btn-lg btn-primary btn-light btn-block" onClick='location.href="/register"'>Зарегистрироваться</button>
 </form>
+
+
+</div>
 {% endblock %}
